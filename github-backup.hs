@@ -436,13 +436,15 @@ backupRepo repo = evalStateT (runBackup go) . newState =<< Git.Config.read repo
 
 backupName :: String -> IO ()
 backupName name = do
-	userrepos <- either (const []) id <$>
-		Github.userRepos name Github.All
-	orgrepos <- either (const []) id <$>
-		Github.organizationRepos name
-	let repos = userrepos ++ orgrepos
-	when (null repos) $
-		error $ "No GitHub repositories found for " ++ name
+	userrepos <- Github.userRepos name Github.All
+	orgrepos <- Github.organizationRepos name
+	repos <- case (userrepos, orgrepos) of
+		(Left e, Left _) ->
+			error $ "No GitHub repositories found for " ++
+				name ++ " (" ++ e ++ ")"
+		(Left _, Right r) -> return r
+		(Right r, Left _) -> return r
+		(Right r, Right r') -> return $ r ++ r'
 	status <- forM repos $ \repo -> do
 		let dir = Github.repoName repo
 		unlessM (doesDirectoryExist dir) $ do
