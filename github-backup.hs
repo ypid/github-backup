@@ -441,7 +441,7 @@ backupName name = do
 	repos <- case (userrepos, orgrepos) of
 		(Left e, Left _) ->
 			error $ "No GitHub repositories found for " ++
-				name ++ " (" ++ e ++ ")"
+				name ++ " (" ++ show e ++ ")"
 		(Left _, Right r) -> return r
 		(Right r, Left _) -> return r
 		(Right r, Right r') -> return $ r ++ r'

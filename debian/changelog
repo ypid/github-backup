@@ -2,6 +2,7 @@ github-backup (1.20130614) UNRELEASED; urgency=low
 
   * Pass --ignore-removal to git-add, in preparation for a future change
     to its default behavior. Requires git 1.8.3. Closes: #711287
+  * Build fixes for haskell-github 0.7.0.
 
  -- Joey Hess <joeyh@debian.org>  Fri, 14 Jun 2013 15:31:02 -0400
 
